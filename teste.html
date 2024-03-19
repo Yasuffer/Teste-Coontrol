@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processo seletivo Coontrol</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Empresas</h1>
+
+    <h2>Resultados:</h2>
+    <div id="resultados"></div>
+    <script>
+const empresas = [
+    {
+        nome: "Empresa 1",
+        dataFundacao: new Date("2020-01-07"),
+        numFuncionarios: 50,
+        regiao: "Nordeste",
+        setor: "Industrial"
+    },
+    {
+        nome: "Empresa 2",
+        dataFundacao: new Date("2005-05-07"),
+        numFuncionarios: 100,
+        regiao: "Sudeste",
+        setor: "Varejo"
+    },
+    {
+        nome: "Empresa 3",
+        dataFundacao: new Date("1893-03-27"),
+        numFuncionarios: 200,
+        regiao: "Centro-Oeste",
+        setor: "Serviços"
+    },
+    {
+        nome: "Empresa 4",
+        dataFundacao: new Date("1999-12-23"),
+        numFuncionarios: 150,
+        regiao: "Sul",
+        setor: "Agrícola"
+    },
+    {
+        nome: "Empresa 5",
+        dataFundacao: new Date("1980-01-16"),
+        numFuncionarios: 250,
+        regiao: "Nordeste",
+        setor: "Industrial"
+    }
+];
+
+// Encontrar a região com maior número de funcionários
+function regiaoComMaisFuncionarios(empresas) {
+    const regioes = {};
+    empresas.forEach(empresa => {
+        regioes[empresa.regiao] = (regioes[empresa.regiao] || 0) + empresa.numFuncionarios;
+    });
+    const regiaoMaisFuncionarios = Object.keys(regioes).reduce((a, b) => regioes[a] > regioes[b] ? a : b);
+    return { regiao: regiaoMaisFuncionarios, numFuncionarios: regioes[regiaoMaisFuncionarios] };
+}
+
+// Encontrar a empresa mais antiga
+function empresaMaisAntiga(empresas) {
+    return empresas.reduce((a, b) => a.dataFundacao < b.dataFundacao ? a : b).nome;
+}
+
+// Encontrar a região com mais empresas do setor Industrial
+function regiaoComMaisIndustrial(empresas) {
+    const regioes = {};
+    empresas.forEach(empresa => {
+        if (empresa.setor === "Industrial") {
+            regioes[empresa.regiao] = (regioes[empresa.regiao] || 0) + 1;
+        }
+    });
+    const regiaoMaisIndustrial = Object.keys(regioes).reduce((a, b) => regioes[a] > regioes[b] ? a : b);
+    return { regiao: regiaoMaisIndustrial, numEmpresas: regioes[regiaoMaisIndustrial] };
+}
+
+// Contar o número de empresas em cada setor
+function contarEmpresasPorSetor(empresas) {
+    const setores = {};
+    empresas.forEach(empresa => {
+        setores[empresa.setor] = (setores[empresa.setor] || 0) + 1;
+    });
+    return setores;
+}
+
+// Calcular o número total de funcionários
+function calcularTotalFuncionarios(empresas) {
+    return empresas.reduce((total, empresa) => total + empresa.numFuncionarios, 0);
+}
+console.log("Região com mais funcionários:", regiaoComMaisFuncionarios(empresas));
+console.log("Empresa mais antiga:", empresaMaisAntiga(empresas));
+console.log("Região com mais empresas industriais:", regiaoComMaisIndustrial(empresas));
+console.log("Número de empresas por setor:", contarEmpresasPorSetor(empresas));
+console.log("Número total de funcionários:", calcularTotalFuncionarios(empresas));
+
+function exibirResultados() {
+            const resultadosDiv = document.getElementById("resultados");
+            const resultados = `
+                <table>
+                    <tr>
+                        <th>Região com mais funcionários</th>
+                        <td>${regiaoComMaisFuncionarios(empresas).regiao}</td>
+                        <td>${regiaoComMaisFuncionarios(empresas).numFuncionarios}</td>
+                    </tr>
+                    <tr>
+                        <th>Empresa mais antiga</th>
+                        <td colspan="2">${empresaMaisAntiga(empresas)}</td>
+                    </tr>
+                    <tr>
+                        <th>Região com mais empresas industriais</th>
+                        <td>${regiaoComMaisIndustrial(empresas).regiao}</td>
+                        <td>${regiaoComMaisIndustrial(empresas).numEmpresas}</td>
+                    </tr>
+                    <tr>
+                        <th>Número de empresas por setor</th>
+                        <td colspan="2">
+                            <ul>
+                                ${Object.entries(contarEmpresasPorSetor(empresas)).map(([setor, numEmpresas]) => `<li>${setor}: ${numEmpresas}</li>`).join('')}
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Número total de funcionários</th>
+                        <td colspan="2">${calcularTotalFuncionarios(empresas)}</td>
+                    </tr>
+                </table>
+            `;
+            resultadosDiv.innerHTML = resultados;
+        }
+        window.onload = exibirResultados;
+    </script>
+</body>
+</html>
